@@ -1,0 +1,18 @@
+# secrets
+.env
+
+# local data and build output
+data/
+logs/
+dbt/fincore/target/
+dbt/fincore/dbt_packages/
+dbt/fincore/logs/
+
+# python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+*.egg-info/
+

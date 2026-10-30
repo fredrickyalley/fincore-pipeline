@@ -1,0 +1,28 @@
+name: fincore
+version: "1.0.0"
+config-version: 2
+profile: fincore
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+vars:
+  # set by Airflow on every run: --vars "{run_date: 'YYYY-MM-DD'}"
+  run_date: "1970-01-01"
+
+models:
+  fincore:
+    staging:
+      +schema: staging
+      +materialized: view
+    marts:
+      +schema: marts
+      +materialized: table
+
+seeds:
+  fincore:
+    +schema: reference

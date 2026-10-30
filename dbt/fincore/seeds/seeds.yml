@@ -1,0 +1,12 @@
+version: 2
+
+seeds:
+  - name: instrument_metadata
+    description: Static instrument reference data maintained by the risk team.
+    config:
+      column_types:
+        symbol: varchar(32)
+        isin: varchar(12)
+    columns:
+      - name: symbol
+        data_tests: [not_null, unique]

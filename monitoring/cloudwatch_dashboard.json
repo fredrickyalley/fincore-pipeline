@@ -1,0 +1,132 @@
+{
+  "start": "-P30D",
+  "periodOverride": "inherit",
+  "widgets": [
+    {
+      "type": "text",
+      "x": 0, "y": 0, "width": 24, "height": 2,
+      "properties": {
+        "markdown": "## FinCore daily pipeline\nOne datapoint per trade date. Deadline 06:30 America/New_York. Runbook: RUNBOOK.md. Custom metrics: namespace `FinCore/Pipeline`, dimension `Pipeline=fincore_daily`."
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 2, "width": 12, "height": 6,
+      "properties": {
+        "title": "Glue ETL duration (minutes), last 30 days",
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "stat": "Maximum",
+        "period": 86400,
+        "metrics": [
+          [{ "expression": "m1 / 60000", "label": "Duration (min)", "id": "e1" }],
+          ["Glue", "glue.driver.aggregate.elapsedTime", "JobName", "fincore-etl", "JobRunId", "ALL", "Type", "count", { "id": "m1", "visible": false }]
+        ],
+        "annotations": {
+          "horizontal": [{ "label": "execution_timeout (120 min)", "value": 120, "color": "#d62728" }]
+        },
+        "yAxis": { "left": { "min": 0, "label": "minutes", "showUnits": false } }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 2, "width": 12, "height": 6,
+      "properties": {
+        "title": "Trade records per run",
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "stat": "Maximum",
+        "period": 86400,
+        "metrics": [
+          ["FinCore/Pipeline", "TotalTradeCount", "Pipeline", "fincore_daily", { "label": "Total" }],
+          ["FinCore/Pipeline", "CleanTradeCount", "Pipeline", "fincore_daily", { "label": "Clean" }],
+          ["FinCore/Pipeline", "RejectedTradeCount", "Pipeline", "fincore_daily", { "label": "Rejected", "yAxis": "right" }]
+        ],
+        "yAxis": { "left": { "min": 0 }, "right": { "min": 0 } }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 8, "width": 12, "height": 6,
+      "properties": {
+        "title": "Rejection rate per run (%)",
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "stat": "Maximum",
+        "period": 86400,
+        "metrics": [
+          ["FinCore/Pipeline", "RejectRatePercent", "Pipeline", "fincore_daily", { "label": "Reject rate %" }]
+        ],
+        "annotations": {
+          "horizontal": [{ "label": "Quality gate (2%)", "value": 2, "color": "#d62728" }]
+        },
+        "yAxis": { "left": { "min": 0, "max": 5, "showUnits": false } }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 8, "width": 6, "height": 6,
+      "properties": {
+        "title": "SLA compliance, last 30 days (runs)",
+        "view": "singleValue",
+        "region": "us-east-1",
+        "stat": "Sum",
+        "period": 2592000,
+        "setPeriodToTimeRange": true,
+        "metrics": [
+          ["FinCore/Pipeline", "SlaMet", "Pipeline", "fincore_daily", { "label": "Before 06:30" }],
+          ["FinCore/Pipeline", "SlaMissed", "Pipeline", "fincore_daily", { "label": "After 06:30", "color": "#d62728" }]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 18, "y": 8, "width": 6, "height": 6,
+      "properties": {
+        "title": "SLA per run",
+        "view": "bar",
+        "region": "us-east-1",
+        "stat": "Sum",
+        "period": 86400,
+        "metrics": [
+          ["FinCore/Pipeline", "SlaMet", "Pipeline", "fincore_daily", { "label": "On time", "color": "#2ca02c" }],
+          ["FinCore/Pipeline", "SlaMissed", "Pipeline", "fincore_daily", { "label": "Late", "color": "#d62728" }]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 14, "width": 12, "height": 6,
+      "properties": {
+        "title": "dbt test pass rate per run (%)",
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "stat": "Minimum",
+        "period": 86400,
+        "metrics": [
+          ["FinCore/Pipeline", "DbtTestPassRatePercent", "Pipeline", "fincore_daily", { "label": "Pass rate %" }],
+          ["FinCore/Pipeline", "DbtTestsFailed", "Pipeline", "fincore_daily", { "label": "Failed tests", "yAxis": "right", "stat": "Maximum" }]
+        ],
+        "yAxis": { "left": { "min": 0, "max": 100, "showUnits": false }, "right": { "min": 0 } }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 14, "width": 12, "height": 6,
+      "properties": {
+        "title": "P&L unresolvable trades per run",
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "stat": "Maximum",
+        "period": 86400,
+        "metrics": [
+          ["FinCore/Pipeline", "PnlUnresolvableCount", "Pipeline", "fincore_daily", { "label": "Unresolvable" }]
+        ],
+        "annotations": {
+          "horizontal": [{ "label": "Quality gate (100)", "value": 100, "color": "#d62728" }]
+        },
+        "yAxis": { "left": { "min": 0 } }
+      }
+    }
+  ]
+}

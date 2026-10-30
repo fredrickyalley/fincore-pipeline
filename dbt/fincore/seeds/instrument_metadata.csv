@@ -1,0 +1,11 @@
+symbol,instrument_name,asset_class,currency,exchange,sector,isin
+AAPL,Apple Inc.,EQUITY,USD,XNAS,Information Technology,US0378331005
+MSFT,Microsoft Corp.,EQUITY,USD,XNAS,Information Technology,US5949181045
+JPM,JPMorgan Chase & Co.,EQUITY,USD,XNYS,Financials,US46625H1005
+BRK.B,Berkshire Hathaway Inc. Class B,EQUITY,USD,XNYS,Financials,US0846707026
+VOD.L,Vodafone Group plc,EQUITY,GBP,XLON,Communication Services,GB00BH4HKS39
+HSBA.L,HSBC Holdings plc,EQUITY,GBP,XLON,Financials,GB0005405286
+US10Y,US Treasury 10Y Note,FIXED_INCOME,USD,OTC,Government,
+GBPUSD,British Pound / US Dollar,FX,USD,OTC,Currency,
+EURUSD,Euro / US Dollar,FX,USD,OTC,Currency,
+USDJPY,US Dollar / Japanese Yen,FX,JPY,OTC,Currency,

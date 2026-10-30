@@ -1,0 +1,24 @@
+# Every value comes from the environment (see .env.example). Never commit credentials.
+# FINCORE_DBT_TARGET selects the output: prod (Redshift) or local (docker compose Postgres).
+fincore:
+  target: "{{ env_var('FINCORE_DBT_TARGET', 'prod') }}"
+  outputs:
+    prod:
+      type: redshift
+      host: "{{ env_var('FINCORE_WAREHOUSE_HOST') }}"
+      port: "{{ env_var('FINCORE_WAREHOUSE_PORT', '5439') | as_number }}"
+      user: "{{ env_var('FINCORE_WAREHOUSE_USER') }}"
+      password: "{{ env_var('FINCORE_WAREHOUSE_PASSWORD') }}"
+      dbname: "{{ env_var('FINCORE_WAREHOUSE_DB', 'fincore') }}"
+      schema: analytics
+      threads: 4
+      sslmode: require
+    local:
+      type: postgres
+      host: "{{ env_var('FINCORE_WAREHOUSE_HOST', 'localhost') }}"
+      port: "{{ env_var('FINCORE_WAREHOUSE_PORT', '5432') | as_number }}"
+      user: "{{ env_var('FINCORE_WAREHOUSE_USER') }}"
+      password: "{{ env_var('FINCORE_WAREHOUSE_PASSWORD') }}"
+      dbname: "{{ env_var('FINCORE_WAREHOUSE_DB', 'fincore') }}"
+      schema: analytics
+      threads: 4

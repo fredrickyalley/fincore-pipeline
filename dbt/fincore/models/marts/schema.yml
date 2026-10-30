@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: fct_daily_trades
+    description: One row per clean trade with realized P&L in USD (NULL when unresolvable).
+    columns:
+      - name: order_id
+        data_tests: [not_null, unique]
+      - name: symbol
+        data_tests: [not_null]
+      - name: trade_date
+        data_tests: [not_null]
+      - name: quantity
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: false
+      - name: price
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: false
+      - name: side
+        data_tests:
+          - accepted_values:
+              values: ["BUY", "SELL"]
+
+  - name: dim_instrument
+    description: One row per symbol; seed reference data plus latest close.
+    columns:
+      - name: symbol
+        data_tests: [not_null, unique]
+
+  - name: agg_portfolio_pnl
+    description: One row per portfolio per date. Exact sum of fct_daily_trades.realized_pnl_usd.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [portfolio_id, pnl_date]
+    columns:
+      - name: portfolio_id
+        data_tests: [not_null]
+      - name: pnl_date
+        data_tests: [not_null]

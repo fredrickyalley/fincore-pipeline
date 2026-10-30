@@ -1,0 +1,10 @@
+.git
+.env
+data
+logs
+claude-output
+**/__pycache__
+.pytest_cache
+.ruff_cache
+dbt/fincore/target
+dbt/fincore/dbt_packages

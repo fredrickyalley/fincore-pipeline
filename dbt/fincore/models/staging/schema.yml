@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_trades
+    description: Typed view over raw.fincore_trades.
+    columns:
+      - name: order_id
+        data_tests: [not_null]
+
+  - name: stg_market_data
+    description: Typed view over raw.fincore_market_data; positive prices only.
+    columns:
+      - name: symbol
+        data_tests: [not_null]
+      - name: close_price
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: false
+
+  - name: stg_portfolio_positions
+    description: Typed view over raw.fincore_portfolio_positions.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [portfolio_id, symbol, as_of_date]
